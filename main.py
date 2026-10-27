@@ -50,6 +50,18 @@ def report():
         "can_write_usr": sh("touch /usr/local/.probe 2>&1 && echo WRITABLE && rm -f /usr/local/.probe"),
         "systemd_bin": sh("ls -la /usr/lib/systemd/systemd /sbin/init 2>&1"),
         "caps": sh("grep CapEff /proc/self/status 2>&1"),
+        "kvm_device": os.path.exists("/dev/kvm"),
+        "kvm_listing": sh("ls -l /dev/kvm 2>&1"),
+        "kvm_module": sh("ls /sys/module/kvm* 2>&1 | head -3"),
+        "cpu_flags": sh("grep -m1 '^flags' /proc/cpuinfo 2>&1 | tr ' ' '\\n' | grep -E '^(vmx|svm)$' | head -2; echo done"),
+        "cgroup_mount": sh("mount | grep cgroup 2>&1"),
+        "cgroup_writable": sh("touch /sys/fs/cgroup/.probe 2>&1 && echo YES && rm -f /sys/fs/cgroup/.probe || echo NO"),
+        "apt_qemu": sh("apt-cache policy qemu-system-x86 2>&1 | head -4"),
+        "apt_systemd": sh("apt-cache policy systemd systemd-sysv 2>&1 | head -8"),
+        "apt_tigervnc": sh("apt-cache policy tigervnc-standalone-server novnc websockify nginx-light 2>&1 | head -16"),
+        "disk": sh("df -h / /app 2>&1"),
+        "mem": sh("free -m 2>&1"),
+        "nproc": sh("nproc 2>&1"),
     }
     return json.dumps(data, indent=2, ensure_ascii=False)
 

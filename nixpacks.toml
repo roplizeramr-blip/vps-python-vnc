@@ -1,0 +1,17 @@
+# Nixpacks customisation for the native (non-Docker) CranL build.
+#
+# The native builder starts from a Debian 13 slim runtime with root, so the
+# packages the desktop needs can be baked into the image at build time
+# instead of being downloaded on every cold start.
+
+[phases.setup]
+aptPkgs = [
+  "qemu-system-x86",
+  "qemu-utils",
+  "systemd-sysv",
+  "dbus",
+  "ca-certificates",
+]
+
+[phases.start]
+cmd = "/app/start.sh"
